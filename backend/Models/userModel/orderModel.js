@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
-const orderSchema = new mongoose.Schema({
-  orderId: { type: String, required: true },
+const orderModel = new mongoose.Schema({
+  user: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
   productId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Product",
@@ -12,4 +12,4 @@ const orderSchema = new mongoose.Schema({
   amount: { type: Number, required: true },
 });
 
-module.exports = { orderSchema };
+module.exports = { orderModel };
