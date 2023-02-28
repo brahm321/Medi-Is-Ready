@@ -45,7 +45,10 @@ const validateAddress = (address, isSeller) => {
 
   if (isSeller) {
     if (!isStore) {
-      return { isValid: false, message: "You are seller address must be of store type" };
+      return {
+        isValid: false,
+        message: "You are seller address must be of store type",
+      };
     }
   }
   if (!street) {
@@ -70,13 +73,26 @@ const validateAddress = (address, isSeller) => {
   return { isValid: true, message: "Address is valid" };
 };
 
-
 const validateGender = (gender) => {
   // Gender should be either "male", "female" or "other"
   return ["male", "female", "other"].includes(gender);
 };
 
-  
+const checkOnlyOneUserRoleSelected = (isAdmin, isBuyer, isSeller) => {
+  let count = 0;
+  if (isAdmin) {
+    count++;
+  }
+  if (isBuyer) {
+    count++;
+  }
+  if (isSeller) {
+    count++;
+  }
+
+  // Check if only one parameter is true
+  return count === 1;
+};
 
 module.exports = {
   validateName,
@@ -85,4 +101,5 @@ module.exports = {
   validatePhone,
   validateAddress,
   validateGender,
+  checkOnlyOneUserRoleSelected,
 };

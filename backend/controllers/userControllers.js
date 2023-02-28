@@ -13,6 +13,7 @@ const {
   validateName,
   validateEmail,
   validatePassword,
+  checkOnlyOneUserRoleSelected,
 } = require("../utils/validators");
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -189,7 +190,7 @@ const registerUser = asyncHandler(async (req, res) => {
         update, // update object
         options // options object
       );
-      return res.status(400).json({
+      return res.status(201).json({
         message: `Successfully registered ${userType}`,
         updatedUser,
       });
@@ -205,7 +206,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // Create new user
   // console.log("Hashed Password ::::: ", hashedPassword);
-  console.log("Registering the New user");
+  // console.log("Registering the New user");
   const newUser = new User({
     name,
     email,
@@ -238,25 +239,59 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 });
 
-// const authUser = asyncHandler(async (req, res) => {
-//   const { email, password } = req.body;
-//   // we have to verify that user exist or not
-//   const user = await User.findOne({ email });
+const authUser = asyncHandler(async (req, res) => {
+  const { email, password, isAdmin, isBuyer, isSeller } = req.body;
 
-//   // if user exist then we have to check wheather the password is matched or not (remeber that password is stored in our data in encrypted format)
-//   if (user && (await user.matchPassword(password))) {
-//     res.json({
-//       _id: user._id,
-//       name: user.name,
-//       email: user.email,
-//       isAdmin: user.isAdmin,
-//       pic: user.pic,
-//       token: generateToken(user._id),
-//     });
-//   } else {
-//     res.status(401);
-//     throw new Error("Invalid Email or Password");
-//   }
-// });
+  if (!checkOnlyOneUserRoleSelected(isAdmin, isBuyer, isSeller)) {
+    res.status(400).json({
+      message: "Error: Please select only one role",
+    });
+  }
+  if (email.length === 0) {
+    // we have to verify if email and password is valid/empty or not
+    res.status(400).json({
+      message: "Error: Please enter your email",
+    });
+  }
+  if (password.length === 0) {
+    res.status(400).json({
+      message: "Error: Please enter your password",
+    });
+  }
 
-module.exports = { registerUser };
+  // If email and password is not empty then we have to check weather it is valid or not
+  if (!validateEmail(email)) {
+    return res.status(400).json({
+      message: "Error: Invalid email",
+    });
+  }
+
+  let userType;
+  if (isAdmin) userType = "admin";
+  if (isBuyer) userType = "buyer";
+  if (isSeller) userType = "seller";
+
+  // If email is valid then we have to verify that user exist or not
+
+  const user = await User.findOne({ email });
+
+  // Logic for loging with different types (user is buyer, but trying to login for seller etc...)
+  
+
+  // if user exist then we have to check wheather the password is matched or not (remeber that password is stored in our data in encrypted format)
+  if (user && (await user.matchPassword(password))) {
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      pic: user.pic,
+      token: generateToken(user._id),
+    });
+  } else {
+    res.status(401);
+    throw new Error("Invalid Email or Password");
+  }
+});
+
+module.exports = { registerUser, authUser };
