@@ -293,7 +293,15 @@ const authUser = asyncHandler(async (req, res) => {
 try {
   const user = await User.findOne({ email: req.body.email });
   if (user) {
-    const isMatch = await bcrypt.compare(password, user.password.admin);
+    let isMatch = false;
+    if (isAdmin) {
+      isMatch = await bcrypt.compare(password, user.password.admin);
+    } else if (isBuyer) {
+      isMatch = await bcrypt.compare(password, user.password.buyer);
+    } else if (isSeller) {
+      isMatch = await bcrypt.compare(password, user.password.seller);
+    }
+
     if (isAdmin || isBuyer || isSeller) {
       if (isMatch) {
         res.json({
@@ -302,16 +310,21 @@ try {
           userType: userType,
           token: generateToken(user.email),
         });
-      } else {
-        res.status(400).json({ error: "Password doesn't match" });
       }
+      else {
+        res.status(401);
+        throw new Error("Invalid Email or Password");
+      } 
     }
-  } else {
-    res.status(400).json({ error: "User not found" });
   }
-} catch (err) {
-  console.error(err.message);
-  res.status(500).json({ error: "Server error" });
+  else {
+    res.status(401);
+    throw new Error("Invalid Email or Password");
+  }
+} 
+
+catch (err) {
+  res.status(500).json({ error: err.message });
 }
 
 
