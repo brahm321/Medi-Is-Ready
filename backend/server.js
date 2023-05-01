@@ -2,6 +2,9 @@ const express = require("express"); //server
 const dotenv = require("dotenv"); //.env file use karne ke liye
 const connectDB = require("./config/db"); //databse coonection
 const userRoutes = require("./routes/userRoutes"); 
+const productRoutes = require("./routes/productRoutes"); 
+
+
 
 // Instance of this express
 const app = express(); // with the use of this app variable we can start of our own server
@@ -25,5 +28,5 @@ const PORT = process.env.PORT || 5000;
 
 
 app.use("/api/v1/users", userRoutes);
-
+app.use("api/v1/products",productRoutes);
 app.listen(PORT, console.log(`Server is Running on PORT ${PORT}`.yellow.bold));

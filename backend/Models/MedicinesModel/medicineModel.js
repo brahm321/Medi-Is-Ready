@@ -63,16 +63,12 @@ const medicineSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  comments: {
-    type: [commentSchema],
-    default: [],
-  },
   quantity: {
     type: [quantitySchema],
     required: true,
   },
   prescriptionRequired: {
-    type: String,
+    type: Boolean,
     required: true,
   },
   imageURL: {
