@@ -1,17 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
- const { AddProduct } = require("../controllers/productController");
-
-// Route for user registration
-//router.get("/signup", registerUser);
-
-
-//outer.get("/signin", authUser);
+const {
+  AddProduct,
+  AddAllProduct,
+} = require("../controllers/productController");
 
 router.post("/add", AddProduct);
-
-
-
+router.post("/addall", AddAllProduct);
 
 module.exports = router;
