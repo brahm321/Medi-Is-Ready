@@ -1,7 +1,7 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const connectDB = require("./config/db");
-const userRoutes = require("./routes/userRoutes");
+const express = require("express"); //server 
+const dotenv = require("dotenv"); //.env file use karne ke liye
+const connectDB = require("./config/db"); //databse coonection
+const userRoutes = require("./routes/userRoutes"); 
 
 // Instance of this express
 const app = express(); // with the use of this app variable we can start of our own server
@@ -20,8 +20,10 @@ app.get("/", (req, res) => {
   res.send("API is Running");
 });
 
-const PORT = process.env.PORT || 5000; // if in the env file it doesn't find any port then by default it take 5000
+const PORT = process.env.PORT || 5000;
+ // if in the env file it doesn't find any port then by default it take 5000
+
 
 app.use("/api/v1/users", userRoutes);
 
-app.listen(5000, console.log(`Server is Running on PORT ${PORT}`.yellow.bold));
+app.listen(PORT, console.log(`Server is Running on PORT ${PORT}`.yellow.bold));

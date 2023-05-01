@@ -5,6 +5,14 @@ const asyncHandler = require("express-async-handler");
 const generateToken = require("../Config/generateToken");
 const bcrypt = require("bcrypt");
 const { User } = require("../Models/userModel/userModel");
+const jwt = require('jsonwebtoken');
+const config = require('config');
+const dotenv = require("dotenv");
+dotenv.config();
+
+
+
+
 
 const {
   validatePhone,
@@ -239,6 +247,15 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 });
 
+
+
+
+
+
+
+
+
+
 const authUser = asyncHandler(async (req, res) => {
   const { email, password, isAdmin, isBuyer, isSeller } = req.body;
 
@@ -271,27 +288,47 @@ const authUser = asyncHandler(async (req, res) => {
   if (isBuyer) userType = "buyer";
   if (isSeller) userType = "seller";
 
-  // If email is valid then we have to verify that user exist or not
-
-  const user = await User.findOne({ email });
-
-  // Logic for loging with different types (user is buyer, but trying to login for seller etc...)
   
 
-  // if user exist then we have to check wheather the password is matched or not (remeber that password is stored in our data in encrypted format)
-  if (user && (await user.matchPassword(password))) {
-    res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      pic: user.pic,
-      token: generateToken(user._id),
-    });
+try {
+  const user = await User.findOne({ email: req.body.email });
+  if (user) {
+    const isMatch = await bcrypt.compare(password, user.password.admin);
+    if (isAdmin || isBuyer || isSeller) {
+      if (isMatch) {
+        res.json({
+          name: user.name,
+          email: user.email,
+          userType: userType,
+          token: generateToken(user.email),
+        });
+      } else {
+        res.status(400).json({ error: "Password doesn't match" });
+      }
+    }
   } else {
-    res.status(401);
-    throw new Error("Invalid Email or Password");
+    res.status(400).json({ error: "User not found" });
   }
+} catch (err) {
+  console.error(err.message);
+  res.status(500).json({ error: "Server error" });
+}
+
+
+
+
+
+
+
+
+
+
+
+
 });
+
+
+
+
 
 module.exports = { registerUser, authUser };
