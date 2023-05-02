@@ -69,4 +69,22 @@ const AddAllProduct = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { AddProduct, AddAllProduct };
+const SearchByName = asyncHandler(async (req, res) => {
+  const medicineName = req.query.name;
+  console.log(medicineName);
+  const medicine = await Product.findOne({ medicineName: medicineName });
+
+  if (medicine) {
+    res.status(200).json(medicine);
+  } else {
+    res.status(404).json({ message: "Medicine not found" });
+  }
+});
+
+
+// 
+
+
+
+
+module.exports = { AddProduct, AddAllProduct , SearchByName };
