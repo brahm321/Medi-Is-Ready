@@ -72,15 +72,15 @@ const AddAllProduct = asyncHandler(async (req, res) => {
 
 // FULL NAME SEARCH
 
-// const SearchByName = asyncHandler(async (req, res) => {
-//  const medicineName = req.query.name;
-//   const medicine = await Product.findOne({ medicineName: medicineName });
-//   if (medicine) {
-//     res.status(200).json(medicine);
-//   } else {
-//     res.status(404).json({ message: "Medicine not found" });
-//   }
-// });
+const SearchByName = asyncHandler(async (req, res) => {
+ const medicineName = req.query.name;
+  const medicine = await Product.findOne({ medicineName: medicineName });
+  if (medicine) {
+    res.status(200).json(medicine);
+  } else {
+    res.status(404).json({ message: "Medicine not found" });
+  }
+});
 
 // const SearchByName = asyncHandler(async (req, res) => {
 //   const keyword = req.query.keyword;
@@ -106,6 +106,22 @@ const SearchByCategory = asyncHandler(async (req, res) => {
   }
 });
 
+const SearchById = asyncHandler(async (req, res) => {
+  const _id = req.query.id;
+  const medicine = await Product.find({ _id: _id });
+
+  if (medicine) {
+    res.status(200).json(medicine);
+  } else {
+    res.status(404).json({ message: "Medicine not found" });
+  }
+});
+
+
+const GetAllProducts = asyncHandler(async (req, res) => {
+  const medicines = await Product.find({});
+  res.status(200).json(medicines);
+});
 
 
 
@@ -117,4 +133,4 @@ const SearchByCategory = asyncHandler(async (req, res) => {
 
 
 
-module.exports = { AddProduct, AddAllProduct , SearchByName, SearchByCategory  };
+module.exports = { AddProduct, AddAllProduct , SearchByName, SearchByCategory , SearchById , GetAllProducts};
