@@ -71,6 +71,10 @@ const AddAllProduct = asyncHandler(async (req, res) => {
 
 const SearchByName = asyncHandler(async (req, res) => {
   const medicineName = req.query.name;
+
+
+
+
   console.log(medicineName);
   const medicine = await Product.findOne({ medicineName: medicineName });
 
@@ -82,7 +86,11 @@ const SearchByName = asyncHandler(async (req, res) => {
 });
 
 
-// 
+// search by id 
+// search by keyword
+// substr 
+//search by category
+//all medicine\
 
 
 
