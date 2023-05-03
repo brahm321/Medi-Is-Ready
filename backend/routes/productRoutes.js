@@ -4,11 +4,13 @@ const router = express.Router();
 const {
   AddProduct,
   AddAllProduct,
-  SearchByName
+  SearchByName,
+  SearchByCategory
 } = require("../controllers/productController");
 
 router.post("/add", AddProduct);
 router.post("/addall", AddAllProduct);
 router.get("/searchbyname", SearchByName);
+router.get("/SearchByCategory", SearchByCategory);
 
 module.exports = router;

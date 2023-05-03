@@ -69,30 +69,52 @@ const AddAllProduct = asyncHandler(async (req, res) => {
   });
 });
 
-const SearchByName = asyncHandler(async (req, res) => {
-  const medicineName = req.query.name;
 
+// FULL NAME SEARCH
 
+// const SearchByName = asyncHandler(async (req, res) => {
+//  const medicineName = req.query.name;
+//   const medicine = await Product.findOne({ medicineName: medicineName });
+//   if (medicine) {
+//     res.status(200).json(medicine);
+//   } else {
+//     res.status(404).json({ message: "Medicine not found" });
+//   }
+// });
 
+// const SearchByName = asyncHandler(async (req, res) => {
+//   const keyword = req.query.keyword;
+//   const regex = new RegExp(keyword, 'i');
+//   const medicine = await Product.find({ medicineName: { $regex: regex } });
 
-  console.log(medicineName);
-  const medicine = await Product.findOne({ medicineName: medicineName });
+//   if (medicine.length > 0) {
+//     res.status(200).json(medicine);
+//   } else {
+//     res.status(404).json({ message: "Medicine not found" });
+//   }
+// });
 
-  if (medicine) {
-    res.status(200).json(medicine);
+const SearchByCategory = asyncHandler(async (req, res) => {
+  const categories = req.query.category;
+  console.log(categories);
+  const medicines = await Product.find({ categories: categories });
+
+  if (medicines.length > 0) {
+    res.status(200).json(medicines);
   } else {
-    res.status(404).json({ message: "Medicine not found" });
+    res.status(404).json({ message: "Medicines not found in the given category" });
   }
 });
+
+
 
 
 // search by id 
 // search by keyword
 // substr 
-//search by category
 //all medicine\
 
 
 
 
-module.exports = { AddProduct, AddAllProduct , SearchByName };
+module.exports = { AddProduct, AddAllProduct , SearchByName, SearchByCategory  };
