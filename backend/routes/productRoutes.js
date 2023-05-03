@@ -15,7 +15,7 @@ router.post("/addall", AddAllProduct);
 router.get("/searchbyname", SearchByName);
 router.get("/SearchByCategory", SearchByCategory);
 router.get("/SearchById", SearchById);
-router.get("/SearchById", GetAllProducts);
+router.get("/GetAllProducts", GetAllProducts);
 
 
 
